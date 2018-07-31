@@ -6,47 +6,31 @@ const screenName = accessKeys.screen_name; // the user's Twitter name e.g. @Dona
 const Twit = require('twit');
 const T = new Twit(accessKeys);
 
-// required data from the Twitter API
-// 1. Most recent tweets (x 5)
-/*T.get('statuses/user_timeline', { screen_name: screenName, count: 3 }, function (err, data, response) {
-  // data is an array of JSON objects, one for each tweet by the specified user
-  const tweets = data;
-  tweets.forEach(element => {
-    // console.log(element.text);
-  });
-});*/
 
+// 1. Most recent tweets (x 5)
+function recentTweets(userID) {
+  T.get('statuses/user_timeline', { screen_name: screenName, count: 5 }, function (err, data, response) {
+    // data is an array of JSON objects, one for each tweet by the specified user
+    const tweets = data;
+    tweets.forEach(element => {
+      console.log(element.text);
+    });
+  });
+};
 
 // 2. Most recent friends (users that you follow) (x5)
-/*T.get('friends/list', { screen_name: screenName, count: 5 }, function (err, data, response) {
-  // data is a JSON object with one property, "users"
-  // value of data.users is an array of JSON objects, one for each of the users that the account is following
-  const users = data.users;
-  users.forEach(element => {
-    // console.log(element.name);
+function friends(userID) {
+  T.get('friends/list', { screen_name: screenName, count: 5 }, function (err, data, response) {
+    // data is a JSON object with one property, "users"
+    // value of data.users is an array of JSON objects, one for each of the users that the account is following
+    const users = data.users;
+    users.forEach(element => {
+      console.log(element.name);
+    });
   });
-});*/
-
-
-
+};
 
 // 3. Most recent direct messages (x5)
-// first we need to get the user_id of the Twitter user
-let getUserIDfromScreenName = new Promise((resolve, reject) => {
-  T.get('users/show', { screen_name: screenName }, function (err, data, response) {
-    userID = data.id;
-    if (userID) {
-      resolve(userID);
-    } else {
-      reject("Error getting userID");
-    }
-  });
-});
-
-getUserIDfromScreenName
-  .then(getDMs)
-  .catch(userIDerror);
-
 function getDMs(userID) {
   T.get('direct_messages/events/list', { screen_name: screenName, count: 20 }, function (err, data, response) {
     // data is a JSON object, the value of the first key ("events") is an array of objects
@@ -70,3 +54,25 @@ function getDMs(userID) {
 function userIDerror(message) {
   console.log(message);
 };
+
+
+// get the user_id of the Twitter user as a Promise
+let getUserIDfromScreenName = new Promise((resolve, reject) => {
+  T.get('users/show', { screen_name: screenName }, function (err, data, response) {
+    userID = data.id;
+    if (userID) {
+      resolve(userID);
+    } else {
+      reject("Error getting userID");
+    }
+  });
+});
+
+// Promise is not chained, because I want to pass the "resolve" value that the Promise returns
+// to all of these functions. Chaining promises passes the result of each Promise to the next
+getUserIDfromScreenName.then(recentTweets);
+getUserIDfromScreenName.then(friends);
+getUserIDfromScreenName.then(getDMs);
+getUserIDfromScreenName.catch(userIDerror);
+
+
