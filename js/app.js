@@ -7,8 +7,12 @@ const T = new Twit(accessKeys);
 
 // required data from the Twitter API
 // 1. Most recent tweets (x 5)
-T.get('users/lookup', { screen_name: 'theJeremyBowden' }, function (err, data, response) {
-  console.log(data);
+T.get('statuses/user_timeline', { screen_name: 'theJeremyBowden', count: 3 }, function (err, data, response) {
+  // data is an array of JSON objects, one for each tweet by the specified user
+  const tweets = data;
+  tweets.forEach(element => {
+    console.log(element.text);
+  });
 });
 
 
@@ -18,7 +22,7 @@ T.get('friends/list', { screen_name: 'theJeremyBowden', count: 5 }, function (er
   // value of data.users is an array of JSON objects, one for each of the users that the account is following
   const users = data.users;
   users.forEach(element => {
-    // console.log(element.name);
+    console.log(element.name);
   });
 });
 
