@@ -1,11 +1,33 @@
 const express = require('express');
 const app = express();
-app.use('/static', express.static('public')); // serves our static files from the directory 'public', to the .../static address in the browser 
+app.use('/static', express.static('public')); // serves the static files from the directory 'public', to the .../static address in the browser 
 app.set('view engine', 'pug');
 
-// get the Twitter authentication credentials object from config.js
-// and create a new Twit object with it, which can be used to make requests
-// to Twitter's API
+const mainRoutes = require('./js/routes.js'); // import the "exported routes" from the routes.js file in the /js directory
+
+app.use(mainRoutes); // use the mainRoutes variable to make the middleware in the /js/routes.js file 
+
+app.use((req, res, next) => {
+  const err = new Error('Not Found');
+  err.status = 404;
+  next(err);
+});
+
+app.use((err, req, res, next) => {
+  res.locals.error = err;
+  res.status(err.status);
+  res.render('error');
+});
+
+app.listen(3000, () => {  // this callback function is only required to log the info message to the console
+  console.log('The application is running on localhost:3000')
+});
+
+
+//
+// get the Twitter authentication credentials object from config.js  and create a
+// new Twit object with it, which can be used to make requests to Twitter's API
+//
 const accessKeys = require('./js/config');
 const screenName = accessKeys.screen_name; // the user's Twitter name e.g. @DonaldDuck
 const Twit = require('twit');
