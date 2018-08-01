@@ -5,7 +5,9 @@ const accessKeys = require('./config');
 const screenName = accessKeys.screen_name; // the user's Twitter name e.g. @DonaldDuck
 const Twit = require('twit');
 const T = new Twit(accessKeys);
-let myTweets = []; // array to store tweet objects (ref function recentTweets)
+let myTweets = []; // array to store 5 recent tweets, as objects
+let DMconversation = [];  // array to store recent conversation (5 DMs), as objects
+let myFriends = [];  // array to store 5 recent friends, as objects
 
 
 // 1. Most recent tweets (x 5)
@@ -51,39 +53,36 @@ function friends() {
     // value of data.users is an array of JSON objects, one for each of the users that the account is following
     const users = data.users;
     users.forEach(element => {
-      console.log(element.name);
+      let friend = {};
+      friend.userName = element.name;
+      friend.userScreenName = element.screen_name;
+      friend.userImage = element.profile_image_url;
+      myFriends.push(friend);
     });
   });
 };
 
 // 3. Most recent direct messages (x5)
 function getDMs(userID) {
-  T.get('direct_messages/events/list', { screen_name: screenName, count: 5 }, function (err, data, response) {
+  T.get('direct_messages/events/list', { screen_name: screenName, count: 20 }, function (err, data, response) {
     // data is a JSON object, the value of the first key ("events") is an array of objects
     // data.events is the array of objects, one for each of the DMs sent or received by the user
     // console.log(data.events[0].message_create);
-    const DMs = data.events;
+    const DMevents = data.events;
     // for unknown reasons some 'events' (i.e. DMs) are not counted, so I requested 20 and now
     // truncate the list of DM 'events' to 5
-    DMs.splice(5);
-    DMs.forEach(element => {
+    DMevents.splice(5);
+    DMevents.forEach(element => {
       // console.log(element.message_create.message_data.text);
+      const senderDetails = {};
       const senderID = element.message_create.sender_id;
-      if (senderID == userID) {
-        console.log("sent by you");
-      } else {
-        console.log("reply from your friend");
-        const yourFriend = {};
-        T.get('users/show', { user_id: senderID }, function (err, data, response) {
-          yourFriend.userName = data.name;
-          yourFriend.userImage = data.profile_image_url;
-          yourFriend.text = element.message_create.message_data.text;
-          yourFriend.date = element.created_timestamp;
-          console.log(yourFriend);
-        });
-
-
-      }
+      T.get('users/show', { user_id: senderID }, function (err, data, response) {
+        senderDetails.userName = data.name;
+        senderDetails.userImage = data.profile_image_url;
+        senderDetails.text = element.message_create.message_data.text;
+        senderDetails.date = element.created_timestamp;
+        DMconversation.push(senderDetails);
+      });
     });
   });
 };
@@ -110,8 +109,17 @@ let getUserIDfromScreenName = new Promise((resolve, reject) => {
 // Chaining promises passes the result of each Promise to the next
 getUserIDfromScreenName
   .then(getDMs)
-  // .then(recentTweets)
-  // .then(friends)
+  .then(recentTweets)
+  .then(friends)
+  .then(timer)
   .catch(userIDerror)
 
 
+function timer() {
+  setTimeout(function () {
+    // console.log("Timer done!");
+    console.log(DMconversation);
+    console.log(myTweets);
+    console.log(myFriends);
+  }, 1000);
+};
