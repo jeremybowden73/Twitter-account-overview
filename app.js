@@ -1,7 +1,12 @@
+const express = require('express');
+const app = express();
+app.use('/static', express.static('public')); // serves our static files from the directory 'public', to the .../static address in the browser 
+app.set('view engine', 'pug');
+
 // get the Twitter authentication credentials object from config.js
 // and create a new Twit object with it, which can be used to make requests
 // to Twitter's API
-const accessKeys = require('./config');
+const accessKeys = require('./js/config');
 const screenName = accessKeys.screen_name; // the user's Twitter name e.g. @DonaldDuck
 const Twit = require('twit');
 const T = new Twit(accessKeys);
@@ -93,7 +98,7 @@ function userIDerror(message) {
 
 
 // get the user_id of the Twitter user as a Promise
-let getUserIDfromScreenName = new Promise((resolve, reject) => {
+const getUserIDfromScreenName = new Promise((resolve, reject) => {
   T.get('users/show', { screen_name: screenName }, function (err, data, response) {
     userID = data.id;
     if (userID) {
