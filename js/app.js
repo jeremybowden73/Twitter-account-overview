@@ -9,11 +9,34 @@ const T = new Twit(accessKeys);
 
 // 1. Most recent tweets (x 5)
 function recentTweets(userID) {
-  T.get('statuses/user_timeline', { screen_name: screenName, count: 5 }, function (err, data, response) {
+  let tweetsArray = []; // array to store objects, one for each of the 5 recent tweets, containing only properties I need for the app
+  T.get('statuses/user_timeline', { screen_name: screenName, count: 1 }, function (err, data, response) {
     // data is an array of JSON objects, one for each tweet by the specified user
-    const tweets = data;
-    tweets.forEach(element => {
-      console.log(element.text);
+    if (err !== undefined) {
+      console.log(err);
+      console.log("ERROR GETTING DATA FROM TWITTER API");
+    } else if (data) {
+      const tweetObjectTemplate = {
+        userName: `${data[0].user.name}`,
+        userScreenName: `${data[0].user.screen_name}`,
+        userImage: `${data[0].user.profile_image_url}`
+      };
+
+    } else {
+      errorMessage = `There's been a ${response.statusCode} error`;
+      console.log(errorMessage);
+    }
+
+
+
+
+    data.forEach(element => {
+      // tweet = tweetObjectTemplate;
+      // tweet.text = element.text;
+      // tweet.retweets = element.retweet_count;
+      // tweet.like = element.favorite_count;
+      // console.log(tweet);
+      console.log("Hello");
     });
   });
 };
@@ -71,8 +94,8 @@ let getUserIDfromScreenName = new Promise((resolve, reject) => {
 // Promise is not chained, because I want to pass the "resolve" value that the Promise returns
 // to all of these functions. Chaining promises passes the result of each Promise to the next
 getUserIDfromScreenName.then(recentTweets);
-getUserIDfromScreenName.then(friends);
-getUserIDfromScreenName.then(getDMs);
+// getUserIDfromScreenName.then(friends);
+// getUserIDfromScreenName.then(getDMs);
 getUserIDfromScreenName.catch(userIDerror);
 
 
