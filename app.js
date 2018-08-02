@@ -36,7 +36,7 @@ let dataObject = {};
 
 let tweets = T.get('statuses/user_timeline', { screen_name: screenName, count: 2 });
 let friends = T.get('friends/list', { screen_name: screenName, count: 3 });
-let DMs = T.get('direct_messages/events/list', { screen_name: screenName, count: 1 });
+let DMs = T.get('direct_messages/events/list', { screen_name: screenName, count: 3 });
 
 
 // get the user_id of the Twitter user as a Promise
@@ -98,35 +98,40 @@ tweets                          // get the Promise returned by the first Twit fu
     // console.log(data);
     data.forEach(element => {
       // console.log(element.message_create.message_data.text);
-      let DMdetails = {};
-      DMdetails.text = element.message_create.message_data.text;
-      DMdetails.date = element.created_timestamp;
-      DMlist.push(DMdetails);
+      // Promise to create and populate some of the object DMdetails 
+      let promise1 = new Promise(function (resolve, reject) {
+        let DMdetails = {};
+        DMdetails.text = element.message_create.message_data.text;
+        DMdetails.date = element.created_timestamp;
+        resolve(DMdetails);
+      });
+
       // need to get the user's name and image, which is not available in the API for "direct_messages/events/list"
       // so need to make another request to the API for that data
-      /*const senderID = element.message_create.sender_id;
+      const senderID = element.message_create.sender_id;
+      // Promise will be returned from the twit method
       let user = T.get('users/show', { user_id: senderID });
 
-      user
-        .then(function (result) {
-          const data = result.data;
-          DMdetails.userName = data.name;
-          DMdetails.userImage = data.profile_image_url;
-        })
-        .then(function () {
-          console.log("HELLO");
-          DMlist.push(DMdetails);
-        })*/
-    });
+      // get a Promise to resolve when both the Promises above are resolved
+      let populateDMdetails = Promise.all([promise1, user]);
 
-    // console.log("DMLIST" + DMlist);
+      // post-process the resolve received from populateDMdetails
+      populateDMdetails.then(function (result) {
+        let objToStore = result[0];         // get the object that's resolved from promise1
+        const data = result[1].data;        // get the data part from the Twit resolve
+        objToStore.userName = data.name;
+        objToStore.userImage = data.profile_image_url;
+        // console.log(objToStore);
+        DMlist.push(objToStore);
+        // console.log(DMlist);
+      });
+    });
     dataObject.DMs = DMlist;
-    console.log(dataObject);
   });
 
 
-
-
+console.log(dataObject);
+timer();
 
 
 // getUserIDfromScreenName
@@ -139,9 +144,7 @@ tweets                          // get the Promise returned by the first Twit fu
 
 function timer() {
   setTimeout(function () {
-    // console.log("Timer done!");
-    console.log(DMlist);
-    console.log(myTweets);
-    console.log(myFriends);
-  }, 1000);
+    console.log("Timer done!");
+    console.log(dataObject);
+  }, 1500);
 };
