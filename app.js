@@ -42,12 +42,12 @@ let DMs = T.get('direct_messages/events/list', { screen_name: screenName, count:
 // get the user_id of the Twitter user as a Promise
 // const getUserIDfromScreenName = T.get('users/show', { screen_name: screenName });
 
-// function timer() {
-//   setTimeout(function () {
-//     console.log("Timer done!");
-//     console.log(dataObject);
-//   }, 2000);
-// };
+function timer() {
+  setTimeout(function () {
+    console.log("Timer done!");
+    console.log(dataObject);
+  }, 2000);
+};
 
 
 
