@@ -19,9 +19,9 @@ app.use((err, req, res, next) => {
   res.render('error');
 });
 
-// app.listen(3000, () => {  // this callback function is only required to log the info message to the console
-//   console.log('The application is running on localhost:3000')
-// });
+app.listen(3000, () => {  // this callback function is only required to log the info message to the console
+  console.log('The application is running on localhost:3000')
+});
 
 
 //
@@ -40,8 +40,14 @@ let DMs = T.get('direct_messages/events/list', { screen_name: screenName, count:
 
 
 // get the user_id of the Twitter user as a Promise
-const getUserIDfromScreenName = T.get('users/show', { screen_name: screenName });
+// const getUserIDfromScreenName = T.get('users/show', { screen_name: screenName });
 
+// function timer() {
+//   setTimeout(function () {
+//     console.log("Timer done!");
+//     console.log(dataObject);
+//   }, 2000);
+// };
 
 
 
@@ -95,7 +101,8 @@ tweets                          // get the Promise returned by the first Twit fu
     // for unknown reasons some 'events' (i.e. DMs) are not counted, so I requested 20 and now truncate the list of DM 'events' to 5
     const data = result.data.events;    // result.data.events is an array of JSON objects, one for each DM
     data.splice(5);
-    // console.log(data);
+
+
     data.forEach(element => {
       // console.log(element.message_create.message_data.text);
       // Promise to create and populate some of the object DMdetails 
@@ -127,24 +134,13 @@ tweets                          // get the Promise returned by the first Twit fu
       });
     });
     dataObject.DMs = DMlist;
+  })
+  .catch(function () {
+    console.log("Error getting data from Twitter API");
   });
 
 
-console.log(dataObject);
+console.log("Should be full" + dataObject);
 timer();
 
 
-// getUserIDfromScreenName
-//   .then(getDMs)
-//   .then(recentTweets)
-//   .then(friends)
-//   .then(timer)
-//   .catch(userIDerror)
-
-
-function timer() {
-  setTimeout(function () {
-    console.log("Timer done!");
-    console.log(dataObject);
-  }, 1500);
-};
