@@ -1,25 +1,33 @@
 const express = require('express');
 const app = express();
 app.use('/static', express.static('public')); // serves the static files from the directory 'public', to the .../static address in the browser 
+app.set('views', './views');
 app.set('view engine', 'pug');
 
-const mainRoutes = require('./js/routes.js'); // import the "exported routes" from the routes.js file in the /js directory
+const mainRoutes = require('./js/routes.js'); // import the "module.exports" from the routes.js file in the /js directory
 
 app.use(mainRoutes); // use the mainRoutes variable to make the middleware in the /js/routes.js file 
 
+// if no valid routes are found, the client has requested an erroneous route for some reason
+// so let's create an error object to handle the error
 app.use((req, res, next) => {
   const err = new Error('Not Found');
-  err.status = 404;
+  err.status = 404; // assign value of 404 to the error object's status property (will be used in the error-handling middleware later)
   next(err);
 });
 
+// error-handling middleware. When a next() call is passed an object, this method is called
 app.use((err, req, res, next) => {
   res.locals.error = err;
-  res.status(err.status);
-  res.render('error');
+  if (err.status >= 100 && err.status < 600)
+    res.status(err.status); // sets the status of the response object  to what was set when the err object was created  (e.g. 404, 500 etc)
+  else
+    res.status(500);
+  res.render('error'); // use a nice, custom error page rather than a standard one
 });
 
-app.listen(3000, () => {  // this callback function is only required to log the info message to the console
+
+app.listen(3000, () => {  // callback function logs the info message to the console
   console.log('The application is running on localhost:3000')
 });
 

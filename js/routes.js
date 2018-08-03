@@ -9,7 +9,7 @@ router.get('/', (req, res) => {
   const templateData = { x, y };
 
 
-  res.render('main', templateData);
+  res.render('main');
 });
 
 module.exports = router;
