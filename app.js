@@ -6,7 +6,14 @@ app.set('view engine', 'pug');
 
 const mainRoutes = require('./js/routes.js'); // import the "module.exports" from the routes.js file in the /js directory
 
-app.use(mainRoutes); // use the mainRoutes variable to make the middleware in the /js/routes.js file 
+// app.use('/', (req, res) => {
+//   const x = 'Jeremy';
+//   const y = 'Bowden';
+//   const templateData = { x, y };
+//   res.render('main', templateData);
+// });
+
+app.use(mainRoutes); // use the mainRoutes variable to make the middleware in the /js/routes.js file
 
 // if no valid routes are found, the client has requested an erroneous route for some reason
 // so let's create an error object to handle the error
@@ -54,11 +61,12 @@ function timer() {
   setTimeout(function () {
     console.log("Timer done!");
     console.log(dataObject);
-  }, 2000);
+  }, 1000);
 };
 
 
 
+/*
 tweets                          // get the Promise returned by the first Twit function
   .then(function (result) {     // 'result' is the resolve Object from the first Twit function, i.e. { data : ... , resp : ... } 
     const data = result.data;   // result.data is an array of JSON objects, one for each tweet by the user
@@ -146,9 +154,9 @@ tweets                          // get the Promise returned by the first Twit fu
   .catch(function () {
     console.log("Error getting data from Twitter API");
   });
+*/
 
-
-console.log("Should be full" + dataObject);
+// console.log("Should be full" + dataObject);
 timer();
 
 
