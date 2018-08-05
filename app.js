@@ -6,13 +6,6 @@ app.set('view engine', 'pug');
 
 const mainRoutes = require('./js/routes.js'); // import the "module.exports" from the routes.js file in the /js directory
 
-// app.use('/', (req, res) => {
-//   const x = 'Jeremy';
-//   const y = 'Bowden';
-//   const templateData = { x, y };
-//   res.render('main', templateData);
-// });
-
 app.use(mainRoutes); // use the mainRoutes variable to make the middleware in the /js/routes.js file
 
 // if no valid routes are found, the client has requested an erroneous route for some reason
@@ -47,7 +40,7 @@ const screenName = accessKeys.screen_name; // the user's Twitter name e.g. @Dona
 const Twit = require('twit');
 const T = new Twit(accessKeys);
 
-let dataObject = {};
+let dataObject = { foo: "bar" };
 
 let tweets = T.get('statuses/user_timeline', { screen_name: screenName, count: 2 });
 let friends = T.get('friends/list', { screen_name: screenName, count: 3 });
@@ -56,14 +49,6 @@ let DMs = T.get('direct_messages/events/list', { screen_name: screenName, count:
 
 // get the user_id of the Twitter user as a Promise
 // const getUserIDfromScreenName = T.get('users/show', { screen_name: screenName });
-
-function timer() {
-  setTimeout(function () {
-    console.log("Timer done!");
-    console.log(dataObject);
-  }, 1000);
-};
-
 
 
 /*
@@ -157,6 +142,14 @@ tweets                          // get the Promise returned by the first Twit fu
 */
 
 // console.log("Should be full" + dataObject);
-timer();
+// timer();
 
+// function timer() {
+//   setTimeout(function () {
+//     console.log("Timer done!");
+//     console.log(dataObject);
+//   }, 1000);
+// };
+
+module.exports = dataObject;
 
