@@ -67,8 +67,7 @@ html(lang='en')
 							strong.app--tweet--timestamp= tweets[0].age
 							a.app--tweet--author
 								.app--avatar(style='background-image: url("' + tweets[0].userImage + '")')
-								h4 
-								|  @jillspore
+								p= `@${tweets[0].userScreenName}`
 							p= tweets[0].text
 							ul.app--tweet--actions.circle--list--inline
 								li
