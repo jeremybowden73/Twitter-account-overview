@@ -41,6 +41,7 @@ const Twit = require('twit');
 const T = new Twit(accessKeys);
 
 let dataObject = {};
+let today = Date.now();
 
 let tweets = T.get('statuses/user_timeline', { screen_name: screenName, count: 2 });
 let friends = T.get('friends/list', { screen_name: screenName, count: 3 });
@@ -58,14 +59,14 @@ tweets                          // get the Promise returned by the first Twit fu
     let myTweets = [];
 
     // object constructor for a tweet
-    function tweet(userName, userScreenName, userImage, text, retweets, likes, date) {
+    function tweet(userName, userScreenName, userImage, text, retweets, likes, age) {
       this.userName = `${data[0].user.name}`;
       this.userScreenName = `${data[0].user.screen_name}`;
       this.userImage = `${data[0].user.profile_image_url}`;
       this.text = text;
       this.retweets = retweets;
       this.likes = likes;
-      this.date = date;
+      this.age = age;
     }
 
     // create a tweet object for every tweet in the data returned from the Twitter API and add each one to the array "myTweets"
@@ -74,7 +75,14 @@ tweets                          // get the Promise returned by the first Twit fu
       newTweet.text = element.text;
       newTweet.retweets = element.retweet_count;
       newTweet.likes = element.favorite_count;
-      newTweet.date = element.created_at;
+      let ageInMillisecs = today - Date.parse(element.created_at);
+      if (ageInMillisecs > 864e5) {                                       // if tweet is > 24 hours old
+        newTweet.age = Math.floor(ageInMillisecs / 864e5) + "days";       // answer in days
+      } else if (ageInMillisecs < 36e5) {                                 // if tweet is < 1 hour old
+        newTweet.age = Math.floor(ageInMillisecs / 6e4) + "mins";         // answer in minutes
+      } else {
+        newTweet.age = Math.floor(ageInMillisecs / 36e5) + "hours";       // answer in hours
+      }
       myTweets.push(newTweet);
     });
     dataObject.tweets = myTweets;   // populate the dataObject object
