@@ -40,7 +40,7 @@ const screenName = accessKeys.screen_name; // the user's Twitter name e.g. @Dona
 const Twit = require('twit');
 const T = new Twit(accessKeys);
 
-let dataObject = { foo: "bar" };
+let dataObject = {};
 
 let tweets = T.get('statuses/user_timeline', { screen_name: screenName, count: 2 });
 let friends = T.get('friends/list', { screen_name: screenName, count: 3 });
@@ -51,7 +51,7 @@ let DMs = T.get('direct_messages/events/list', { screen_name: screenName, count:
 // const getUserIDfromScreenName = T.get('users/show', { screen_name: screenName });
 
 
-/*
+
 tweets                          // get the Promise returned by the first Twit function
   .then(function (result) {     // 'result' is the resolve Object from the first Twit function, i.e. { data : ... , resp : ... } 
     const data = result.data;   // result.data is an array of JSON objects, one for each tweet by the user
@@ -78,7 +78,6 @@ tweets                          // get the Promise returned by the first Twit fu
       myTweets.push(newTweet);
     });
     dataObject.tweets = myTweets;   // populate the dataObject object
-    console.log("111 111 111");
     return friends;                 // return a new Promise to the next .then in the chain
   })
 
@@ -93,7 +92,6 @@ tweets                          // get the Promise returned by the first Twit fu
       myFriends.push(friend);
     });
     dataObject.friends = myFriends;   // populate the dataObject object
-    console.log("222 222 222");
     return DMs;                       // return a new Promise to the next .then in the chain
   })
 
@@ -139,9 +137,9 @@ tweets                          // get the Promise returned by the first Twit fu
   .catch(function () {
     console.log("Error getting data from Twitter API");
   });
-*/
 
-// console.log("Should be full" + dataObject);
+
+
 // timer();
 
 // function timer() {
@@ -151,5 +149,4 @@ tweets                          // get the Promise returned by the first Twit fu
 //   }, 1000);
 // };
 
-module.exports = dataObject;
-
+module.exports.dataObject = dataObject;

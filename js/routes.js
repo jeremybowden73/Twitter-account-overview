@@ -1,13 +1,11 @@
 const express = require('express');
 const router = express.Router();
 
-// const mydata = require('../app.js');  need to place this inside the route method so it is declared on every GET request to the / route
+const data = require('../app.js'); // import the file app.js
 
 router.get('/', (req, res) => {
-  const mydata = require('../app.js');
-  console.log("Routes.js:");
-  console.log(mydata);
-  res.render('main', { my: mydata });
+  // data.dataObject is the entire object named "dataObject" that was exported from app.js
+  res.render('main', data.dataObject);
 });
 
 module.exports = router;
