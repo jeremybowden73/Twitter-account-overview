@@ -40,7 +40,7 @@ const screenName = accessKeys.screen_name; // the user's Twitter name e.g. @Dona
 const Twit = require('twit');
 const T = new Twit(accessKeys);
 
-/*let dataObject = {
+let dataObject = {
   tweets:
     [{
       userName: 'Jeremy Bowden',
@@ -50,7 +50,7 @@ const T = new Twit(accessKeys);
       text: 'I guess the system was (is) in need of chang at a decent price. https://t.co/3w4iXwl6eF',
       retweets: 0,
       likes: 0,
-      age: '3mins'
+      age: 'Aug 02'
     },
     {
       userName: 'Jeremy Bowden',
@@ -60,7 +60,7 @@ const T = new Twit(accessKeys);
       text: 'Funny\nWhy you should not learn to code.  ("Just stop already, it\'s too hard.") https://t.co/5lu6sGI9vJ via @YouTube',
       retweets: 0,
       likes: 0,
-      age: '4days'
+      age: 'Jul 30'
     }],
 
 
@@ -94,10 +94,9 @@ const T = new Twit(accessKeys);
       date: '1533022658855',
       userName: 'Daniel',
       userImage: 'http://pbs.twimg.com/profile_images/1022276224880500736/MAxiuCnI_normal.jpg'
-    }],
-  _locals: {}
-}*/
-let dataObject = {};
+    }]
+}
+// let dataObject = {};
 
 let tweets = T.get('statuses/user_timeline', { screen_name: screenName, count: 2 });
 let friends = T.get('friends/list', { screen_name: screenName, count: 3 });
@@ -108,7 +107,7 @@ let DMs = T.get('direct_messages/events/list', { screen_name: screenName, count:
 // const getUserIDfromScreenName = T.get('users/show', { screen_name: screenName });
 
 
-
+/*
 tweets                          // get the Promise returned by the first Twit function
   .then(function (result) {     // 'result' is the resolve Object from the first Twit function, i.e. { data : ... , resp : ... } 
     const data = result.data;   // result.data is an array of JSON objects, one for each tweet by the user
@@ -134,7 +133,7 @@ tweets                          // get the Promise returned by the first Twit fu
       newTweet.retweets = element.retweet_count;
       newTweet.likes = element.favorite_count;
 
-      /* To display the age of tweets in minutes, hours, or days, use this code block
+       To display the age of tweets in minutes, hours, or days, use this code block
          instead of the line that follows  --->  newTweet.age = element.created_at.slice(4, 10);
          Also need to declare as a global: const today = Date.now();
       let ageInMillisecs = today - Date.parse(element.created_at);
@@ -145,7 +144,7 @@ tweets                          // get the Promise returned by the first Twit fu
       } else {
         newTweet.age = Math.floor(ageInMillisecs / 36e5) + "hours";       // answer in hours
       }
-      */
+      
       newTweet.age = element.created_at.slice(4, 10);
       myTweets.push(newTweet);
     });
@@ -206,6 +205,6 @@ tweets                          // get the Promise returned by the first Twit fu
   .catch(function () {
     console.log("Error getting data from Twitter API");
   });
-
+*/
 
 module.exports.dataObject = dataObject;

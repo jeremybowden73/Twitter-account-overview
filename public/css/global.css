@@ -2416,17 +2416,6 @@ a:hover .app--avatar {
   bottom: 10px;
   margin: 0;
 }
-/* added  by Jeremy Bowden for the header image position*/
-.circle--fluid--cell .app--avatar--header {
-  position: relative;
-  left: 250px;
-  bottom: 6px;
-  background-size: cover;
-  margin: 0;
-  width: 30px;
-  height: 30px;
-  border-radius: 20px;
-}
 /* line 216, ../sass/global.sass */
 .app--message--list > li {
   padding: 15px 20px;
@@ -2510,4 +2499,32 @@ input[type="submit"],
 input[type="reset"],
 input[type="button"] {
   padding: 16px 20px;
+}
+
+
+
+
+/* added  by Jeremy Bowden for the header image position */
+.circle--fluid--cell .app--avatar--header {
+  position: relative;
+  left: 250px;
+  bottom: 6px;
+  background-size: cover;
+  margin: 0;
+  width: 30px;
+  height: 30px;
+  border-radius: 20px;
+}
+
+/* added  by Jeremy Bowden for the error page formatting */
+.centre {
+  margin: auto;
+  width: 50%;
+  text-align: center;
+}
+
+.errorImage {
+  margin-top: 40px;
+  width: 80%;
+  object-fit: cover;
 }
