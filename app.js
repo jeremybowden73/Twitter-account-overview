@@ -40,6 +40,61 @@ const screenName = accessKeys.screen_name; // the user's Twitter name e.g. @Dona
 const Twit = require('twit');
 const T = new Twit(accessKeys);
 
+/*let dataObject = {
+  tweets:
+    [{
+      userName: 'Jeremy Bowden',
+      userScreenName: 'TheJeremyBowden',
+      userImage: 'http://pbs.twimg.com/profile_images/967146176448524289/3pGqrvzR_normal.jpg',
+      text: 'I guess the system was (is) in need of chang at a decent price. https://t.co/3w4iXwl6eF',
+      retweets: 0,
+      likes: 0,
+      age: '3mins'
+    },
+    {
+      userName: 'Jeremy Bowden',
+      userScreenName: 'TheJeremyBowden',
+      userImage: 'http://pbs.twimg.com/profile_images/967146176448524289/3pGqrvzR_normal.jpg',
+      text: 'Funny\nWhy you should not learn to code.  ("Just stop already, it\'s too hard.") https://t.co/5lu6sGI9vJ via @YouTube',
+      retweets: 0,
+      likes: 0,
+      age: '4days'
+    }],
+
+
+  friends:
+    [{
+      userName: 'Daniel',
+      userScreenName: 'Daniel70483817',
+      userImage: 'http://pbs.twimg.com/profile_images/1022276224880500736/MAxiuCnI_normal.jpg'
+    },
+    {
+      userName: 'Shutter Socks',
+      userScreenName: 'ShutterSocks',
+      userImage: 'http://pbs.twimg.com/profile_images/1010200596396347392/js3hd9cA_normal.jpg'
+    },
+    {
+      userName: 'Houghton CE Primary',
+      userScreenName: 'HoughtonPrimary',
+      userImage: 'http://pbs.twimg.com/profile_images/798273681843752964/LL9M30vo_normal.jpg'
+    }],
+
+
+  DMs:
+    [{
+      text: 'Thanks !',
+      date: '1533022664723',
+      userName: 'Jeremy Bowden',
+      userImage: 'http://pbs.twimg.com/profile_images/967146176448524289/3pGqrvzR_normal.jpg'
+    },
+    {
+      text: 'done :) good luck',
+      date: '1533022658855',
+      userName: 'Daniel',
+      userImage: 'http://pbs.twimg.com/profile_images/1022276224880500736/MAxiuCnI_normal.jpg'
+    }],
+  _locals: {}
+}*/
 let dataObject = {};
 let today = Date.now();
 
@@ -56,6 +111,7 @@ let DMs = T.get('direct_messages/events/list', { screen_name: screenName, count:
 tweets                          // get the Promise returned by the first Twit function
   .then(function (result) {     // 'result' is the resolve Object from the first Twit function, i.e. { data : ... , resp : ... } 
     const data = result.data;   // result.data is an array of JSON objects, one for each tweet by the user
+    console.log(data);
     let myTweets = [];
 
     // object constructor for a tweet
@@ -63,6 +119,7 @@ tweets                          // get the Promise returned by the first Twit fu
       this.userName = `${data[0].user.name}`;
       this.userScreenName = `${data[0].user.screen_name}`;
       this.userImage = `${data[0].user.profile_image_url}`;
+      this.userBanner = `${data[0].user.profile_banner_url}`;
       this.text = text;
       this.retweets = retweets;
       this.likes = likes;
