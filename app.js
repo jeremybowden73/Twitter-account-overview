@@ -103,10 +103,6 @@ let friends = T.get('friends/list', { screen_name: screenName, count: 3 });
 let DMs = T.get('direct_messages/events/list', { screen_name: screenName, count: 3 });
 
 
-// get the user_id of the Twitter user as a Promise
-// const getUserIDfromScreenName = T.get('users/show', { screen_name: screenName });
-
-
 /*
 tweets                          // get the Promise returned by the first Twit function
   .then(function (result) {     // 'result' is the resolve Object from the first Twit function, i.e. { data : ... , resp : ... } 
