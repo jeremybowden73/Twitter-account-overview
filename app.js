@@ -46,6 +46,7 @@ const T = new Twit(accessKeys);
       userName: 'Jeremy Bowden',
       userScreenName: 'TheJeremyBowden',
       userImage: 'http://pbs.twimg.com/profile_images/967146176448524289/3pGqrvzR_normal.jpg',
+      userBanner: 'https://pbs.twimg.com/profile_banners/883632004348211200/1533588473',
       text: 'I guess the system was (is) in need of chang at a decent price. https://t.co/3w4iXwl6eF',
       retweets: 0,
       likes: 0,
@@ -55,6 +56,7 @@ const T = new Twit(accessKeys);
       userName: 'Jeremy Bowden',
       userScreenName: 'TheJeremyBowden',
       userImage: 'http://pbs.twimg.com/profile_images/967146176448524289/3pGqrvzR_normal.jpg',
+      userBanner: 'https://pbs.twimg.com/profile_banners/883632004348211200/1533588473',
       text: 'Funny\nWhy you should not learn to code.  ("Just stop already, it\'s too hard.") https://t.co/5lu6sGI9vJ via @YouTube',
       retweets: 0,
       likes: 0,
@@ -96,7 +98,6 @@ const T = new Twit(accessKeys);
   _locals: {}
 }*/
 let dataObject = {};
-let today = Date.now();
 
 let tweets = T.get('statuses/user_timeline', { screen_name: screenName, count: 2 });
 let friends = T.get('friends/list', { screen_name: screenName, count: 3 });
@@ -111,7 +112,6 @@ let DMs = T.get('direct_messages/events/list', { screen_name: screenName, count:
 tweets                          // get the Promise returned by the first Twit function
   .then(function (result) {     // 'result' is the resolve Object from the first Twit function, i.e. { data : ... , resp : ... } 
     const data = result.data;   // result.data is an array of JSON objects, one for each tweet by the user
-    console.log(data);
     let myTweets = [];
 
     // object constructor for a tweet
@@ -124,6 +124,7 @@ tweets                          // get the Promise returned by the first Twit fu
       this.retweets = retweets;
       this.likes = likes;
       this.age = age;
+      this.following = `${data[0].user.friends_count}`;
     }
 
     // create a tweet object for every tweet in the data returned from the Twitter API and add each one to the array "myTweets"
@@ -132,6 +133,10 @@ tweets                          // get the Promise returned by the first Twit fu
       newTweet.text = element.text;
       newTweet.retweets = element.retweet_count;
       newTweet.likes = element.favorite_count;
+
+      /* To display the age of tweets in minutes, hours, or days, use this code block
+         instead of the line that follows  --->  newTweet.age = element.created_at.slice(4, 10);
+         Also need to declare as a global: const today = Date.now();
       let ageInMillisecs = today - Date.parse(element.created_at);
       if (ageInMillisecs > 864e5) {                                       // if tweet is > 24 hours old
         newTweet.age = Math.floor(ageInMillisecs / 864e5) + "days";       // answer in days
@@ -140,6 +145,8 @@ tweets                          // get the Promise returned by the first Twit fu
       } else {
         newTweet.age = Math.floor(ageInMillisecs / 36e5) + "hours";       // answer in hours
       }
+      */
+      newTweet.age = element.created_at.slice(4, 10);
       myTweets.push(newTweet);
     });
     dataObject.tweets = myTweets;   // populate the dataObject object
@@ -166,14 +173,13 @@ tweets                          // get the Promise returned by the first Twit fu
     const data = result.data.events;    // result.data.events is an array of JSON objects, one for each DM
     data.splice(5);
 
-
     data.forEach(element => {
-      // console.log(element.message_create.message_data.text);
       // Promise to create and populate some of the object DMdetails 
       let promise1 = new Promise(function (resolve, reject) {
         let DMdetails = {};
         DMdetails.text = element.message_create.message_data.text;
-        DMdetails.date = element.created_timestamp;
+        const dateAndTime = new Date(Number(element.created_timestamp)).toUTCString();
+        DMdetails.date = dateAndTime.slice(5, 11);
         resolve(DMdetails);
       });
 
@@ -192,9 +198,7 @@ tweets                          // get the Promise returned by the first Twit fu
         const data = result[1].data;        // get the data part from the Twit resolve
         objToStore.userName = data.name;
         objToStore.userImage = data.profile_image_url;
-        // console.log(objToStore);
         DMlist.push(objToStore);
-        // console.log(DMlist);
       });
     });
     dataObject.DMs = DMlist;
@@ -203,15 +207,5 @@ tweets                          // get the Promise returned by the first Twit fu
     console.log("Error getting data from Twitter API");
   });
 
-
-
-// timer();
-
-// function timer() {
-//   setTimeout(function () {
-//     console.log("Timer done!");
-//     console.log(dataObject);
-//   }, 1000);
-// };
 
 module.exports.dataObject = dataObject;

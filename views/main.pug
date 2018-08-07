@@ -44,7 +44,6 @@ html(lang='en')
 				.circle--fluid
 					.circle--fluid--cell.circle--fluid--primary.align-bottom.app--tweet--post
 						.app--avatar(style='background-image: url("' + tweets[0].userImage + '")')
-							//- img(src='/static/images/m-spore.png')
 						textarea#tweet-textarea.circle--textarea--input(placeholder="What's happening?")
 						strong#tweet-char.app--tweet--char 140
 					.circle--fluid--cell.align-bottom
@@ -56,7 +55,7 @@ html(lang='en')
 						h2 Timeline
 				.grid-33
 					.app--section--heading
-						strong 129
+						strong= tweets[0].following
 						h2 Following
 				.grid-33
 					.app--section--heading

@@ -2425,6 +2425,7 @@ a:hover .app--avatar {
   margin: 0;
   width: 30px;
   height: 30px;
+  border-radius: 20px;
 }
 /* line 216, ../sass/global.sass */
 .app--message--list > li {
