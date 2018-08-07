@@ -2416,6 +2416,16 @@ a:hover .app--avatar {
   bottom: 10px;
   margin: 0;
 }
+/* added  by Jeremy Bowden for the header image position*/
+.circle--fluid--cell .app--avatar--header {
+  position: relative;
+  left: 250px;
+  bottom: 6px;
+  background-size: cover;
+  margin: 0;
+  width: 30px;
+  height: 30px;
+}
 /* line 216, ../sass/global.sass */
 .app--message--list > li {
   padding: 15px 20px;
