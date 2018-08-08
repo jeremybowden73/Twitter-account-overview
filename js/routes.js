@@ -7,7 +7,6 @@ const accessKeys = require('./config');  // get info for Twit function
 const Twit = require('twit');
 const T = new Twit(accessKeys);
 
-
 router.get('/', (req, res) => {
   // data.dataObject is the entire object named "dataObject" that was exported from app.js
   res.render('main', data.dataObject);
@@ -20,6 +19,13 @@ router.post('/', (req, res) => {
   sendTweet
     .then(function (result) {
       console.log("tweet_id: " + result.data.id);
+      let newTweet = {};
+      // newTweet.userName = result.data.user;
+      newTweet.text = result.data.text;
+      console.log(newTweet);
+      // data.dataObject.tweets.unshift(newTweet);
+      // data.dataObject.pop();
+      // console.log(data.dataObject.tweets);
     })
     .catch(function () {
       console.log("Error sending tweet to Twitter API");

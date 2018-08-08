@@ -1,8 +1,10 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
 const app = express();
 
 app.use(bodyParser.urlencoded({ extended: false })); // enables use of body-parser
+app.use(cookieParser());
 app.use('/static', express.static('public')); // serves the static files from the directory 'public', to the .../static address in the browser 
 app.set('views', './views');
 app.set('view engine', 'pug');
