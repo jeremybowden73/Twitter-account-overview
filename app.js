@@ -38,10 +38,10 @@ app.listen(3000, () => {  // callback function logs the info message to the cons
 //
 // get the Twitter authentication credentials object from config.js  and create a
 // new Twit object with it, which can be used to make requests to Twitter's API
-const accessKeys = require('./js/config');
-const screenName = accessKeys.screen_name; // the user's Twitter name e.g. @DonaldDuck
-const Twit = require('twit');
-const T = new Twit(accessKeys);
+// const accessKeys = require('./js/config');
+// const screenName = accessKeys.screen_name; // the user's Twitter name e.g. @DonaldDuck
+// const Twit = require('twit');
+// const T = new Twit(accessKeys);
 
 /*
 let dataObject = {
@@ -101,12 +101,14 @@ let dataObject = {
     }]
 }
 */
+
+
+/*
 let dataObject = {};
 
 let tweets = T.get('statuses/user_timeline', { screen_name: screenName, count: 5 });
 let friends = T.get('friends/list', { screen_name: screenName, count: 5 });
 let DMs = T.get('direct_messages/events/list', { screen_name: screenName, count: 20 });
-
 
 
 tweets                          // get the Promise returned by the first Twit function
@@ -137,7 +139,7 @@ tweets                          // get the Promise returned by the first Twit fu
 
       //
       //
-      /* To display the age of tweets in minutes, hours, or days, use this code block
+      To display the age of tweets in minutes, hours, or days, use this code block
       instead of the line that follows-- -> newTweet.age = element.created_at.slice(4, 10);
       Also need to declare as a global: const today = Date.now();
       let ageInMillisecs = today - Date.parse(element.created_at);
@@ -147,7 +149,7 @@ tweets                          // get the Promise returned by the first Twit fu
         newTweet.age = Math.floor(ageInMillisecs / 6e4) + "mins";         // answer in minutes
       } else {
         newTweet.age = Math.floor(ageInMillisecs / 36e5) + "hours";       // answer in hours
-      } */
+      } 
       //
       //
 
@@ -212,6 +214,6 @@ tweets                          // get the Promise returned by the first Twit fu
   .catch(function () {
     console.log("Error getting data from Twitter API");
   });
+*/
 
-
-module.exports.dataObject = dataObject;
+// module.exports.dataObject = dataObject;
