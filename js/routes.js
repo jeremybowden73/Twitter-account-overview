@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const data = require('../app.js'); // import the file app.js
+let data = require('../app.js'); // import the file app.js
 
 const accessKeys = require('./config');  // get info for Twit function
 const Twit = require('twit');
@@ -19,12 +19,15 @@ router.post('/', (req, res) => {
   sendTweet
     .then(function (result) {
       console.log("tweet_id: " + result.data.id);
-      let newTweet = {};
-      // newTweet.userName = result.data.user;
-      newTweet.text = result.data.text;
-      console.log(newTweet);
-      // data.dataObject.tweets.unshift(newTweet);
-      // data.dataObject.pop();
+      let newMessage = {
+        userScreenName: result.data.user.screen_name,
+        text: result.data.text
+      }
+      // newMessage.userName = result.data.user.screen_name;
+      // newMessage.text = result.data.text;
+      console.log(newMessage);
+      data.dataObject.tweets.unshift(newMessage);
+      data.dataObject.tweets.pop();
       // console.log(data.dataObject.tweets);
     })
     .catch(function () {
