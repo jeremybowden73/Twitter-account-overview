@@ -1,10 +1,13 @@
 const express = require('express');
+const bodyParser = require('body-parser');
 const app = express();
+
+app.use(bodyParser.urlencoded({ extended: false })); // enables use of body-parser
 app.use('/static', express.static('public')); // serves the static files from the directory 'public', to the .../static address in the browser 
 app.set('views', './views');
 app.set('view engine', 'pug');
 
-const mainRoutes = require('./js/routes.js'); // import the "module.exports" from the routes.js file in the /js directory
+const mainRoutes = require('./js/routes.js'); // import the "module.exports" from routes.js
 
 app.use(mainRoutes); // use the mainRoutes variable to make the middleware in the /js/routes.js file
 
@@ -40,6 +43,7 @@ const screenName = accessKeys.screen_name; // the user's Twitter name e.g. @Dona
 const Twit = require('twit');
 const T = new Twit(accessKeys);
 
+/*
 let dataObject = {
   tweets:
     [{
@@ -96,14 +100,15 @@ let dataObject = {
       userImage: 'http://pbs.twimg.com/profile_images/1022276224880500736/MAxiuCnI_normal.jpg'
     }]
 }
-// let dataObject = {};
+*/
+let dataObject = {};
 
-let tweets = T.get('statuses/user_timeline', { screen_name: screenName, count: 2 });
-let friends = T.get('friends/list', { screen_name: screenName, count: 3 });
-let DMs = T.get('direct_messages/events/list', { screen_name: screenName, count: 3 });
+let tweets = T.get('statuses/user_timeline', { screen_name: screenName, count: 5 });
+let friends = T.get('friends/list', { screen_name: screenName, count: 5 });
+let DMs = T.get('direct_messages/events/list', { screen_name: screenName, count: 20 });
 
 
-/*
+
 tweets                          // get the Promise returned by the first Twit function
   .then(function (result) {     // 'result' is the resolve Object from the first Twit function, i.e. { data : ... , resp : ... } 
     const data = result.data;   // result.data is an array of JSON objects, one for each tweet by the user
@@ -129,9 +134,12 @@ tweets                          // get the Promise returned by the first Twit fu
       newTweet.retweets = element.retweet_count;
       newTweet.likes = element.favorite_count;
 
-       To display the age of tweets in minutes, hours, or days, use this code block
-         instead of the line that follows  --->  newTweet.age = element.created_at.slice(4, 10);
-         Also need to declare as a global: const today = Date.now();
+
+      //
+      //
+      /* To display the age of tweets in minutes, hours, or days, use this code block
+      instead of the line that follows-- -> newTweet.age = element.created_at.slice(4, 10);
+      Also need to declare as a global: const today = Date.now();
       let ageInMillisecs = today - Date.parse(element.created_at);
       if (ageInMillisecs > 864e5) {                                       // if tweet is > 24 hours old
         newTweet.age = Math.floor(ageInMillisecs / 864e5) + "days";       // answer in days
@@ -139,8 +147,11 @@ tweets                          // get the Promise returned by the first Twit fu
         newTweet.age = Math.floor(ageInMillisecs / 6e4) + "mins";         // answer in minutes
       } else {
         newTweet.age = Math.floor(ageInMillisecs / 36e5) + "hours";       // answer in hours
-      }
-      
+      } */
+      //
+      //
+
+
       newTweet.age = element.created_at.slice(4, 10);
       myTweets.push(newTweet);
     });
@@ -201,6 +212,6 @@ tweets                          // get the Promise returned by the first Twit fu
   .catch(function () {
     console.log("Error getting data from Twitter API");
   });
-*/
+
 
 module.exports.dataObject = dataObject;

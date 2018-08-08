@@ -40,11 +40,11 @@ html(lang='en')
 								li
 									a Sign Out
 		.app--tweet
-			form
+			form(action='/', method='post')
 				.circle--fluid
 					.circle--fluid--cell.circle--fluid--primary.align-bottom.app--tweet--post
 						.app--avatar(style='background-image: url("' + tweets[0].userImage + '")')
-						textarea#tweet-textarea.circle--textarea--input(placeholder="What's happening?")
+						textarea#tweet-textarea.circle--textarea--input(placeholder="What's happening?", name="message")
 						strong#tweet-char.app--tweet--char 140
 					.circle--fluid--cell.align-bottom
 						button.button-primary Tweet
