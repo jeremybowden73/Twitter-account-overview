@@ -6,7 +6,7 @@ Please insert your own Twitter keys in a config file at this location:
 
 /js/config.js
 
-Formatted like this:  (note: **@DonaldDuck** should insert **DonaldDuck** for screen_name)
+Formatted like this:
 
 ```javascript
 const keys = {
