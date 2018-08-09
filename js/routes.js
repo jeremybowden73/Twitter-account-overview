@@ -20,12 +20,15 @@ router.post('/', (req, res) => {
     .then(function (result) {
       console.log("tweet_id: " + result.data.id);
       let newMessage = {
+        userName: result.data.user.name,
         userScreenName: result.data.user.screen_name,
-        text: result.data.text
-      }
-      // newMessage.userName = result.data.user.screen_name;
-      // newMessage.text = result.data.text;
-      console.log(newMessage);
+        text: result.data.text,
+        userImage: result.data.user.profile_image_url,
+        age: result.data.created_at.slice(4, 10),
+        retweets: result.data.retweet_count,
+        likes: result.data.favorite_count,
+        following: result.data.user.friends_count
+      };
       data.dataObject.tweets.unshift(newMessage);
       data.dataObject.tweets.pop();
       // console.log(data.dataObject.tweets);
@@ -38,7 +41,6 @@ router.post('/', (req, res) => {
 
   function timer() {
     setTimeout(function () {
-      console.log("Timer done!");
       res.redirect('/');
     }, 2000);
   };

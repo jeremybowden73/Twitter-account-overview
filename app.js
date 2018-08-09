@@ -14,7 +14,7 @@ const mainRoutes = require('./js/routes.js'); // import the "module.exports" fro
 app.use(mainRoutes); // use the mainRoutes variable to make the middleware in the /js/routes.js file
 
 // if no valid routes are found, the client has requested an erroneous route for some reason
-// so let's create an error object to handle the error
+// so create an error object to handle the error
 app.use((req, res, next) => {
   const err = new Error('Not Found');
   err.status = 404; // assign value of 404 to the error object's status property (will be used in the error-handling middleware later)
@@ -31,84 +31,24 @@ app.use((err, req, res, next) => {
   res.render('error'); // use a nice, custom error page rather than a standard one
 });
 
-
-app.listen(3000, () => {  // callback function logs the info message to the console
+app.listen(3000, () => {
   console.log('The application is running on localhost:3000')
 });
 
-
 //
-// get the Twitter authentication credentials object from config.js  and create a
+// get the Twitter authentication credentials object from config.js and create a
 // new Twit object with it, which can be used to make requests to Twitter's API
 const accessKeys = require('./js/config');
 const screenName = accessKeys.screen_name; // the user's Twitter name e.g. @DonaldDuck
 const Twit = require('twit');
 const T = new Twit(accessKeys);
 
-/*
-let dataObject = {
-  tweets:
-    [{
-      userName: 'Jeremy Bowden',
-      userScreenName: 'TheJeremyBowden',
-      userImage: 'http://pbs.twimg.com/profile_images/967146176448524289/3pGqrvzR_normal.jpg',
-      userBanner: 'https://pbs.twimg.com/profile_banners/883632004348211200/1533588473',
-      text: 'I guess the system was (is) in need of chang at a decent price. https://t.co/3w4iXwl6eF',
-      retweets: 0,
-      likes: 0,
-      age: 'Aug 02'
-    },
-    {
-      userName: 'Jeremy Bowden',
-      userScreenName: 'TheJeremyBowden',
-      userImage: 'http://pbs.twimg.com/profile_images/967146176448524289/3pGqrvzR_normal.jpg',
-      userBanner: 'https://pbs.twimg.com/profile_banners/883632004348211200/1533588473',
-      text: 'Funny\nWhy you should not learn to code.  ("Just stop already, it\'s too hard.") https://t.co/5lu6sGI9vJ via @YouTube',
-      retweets: 0,
-      likes: 0,
-      age: 'Jul 30'
-    }],
+let dataObject = {};  // object to store all the useful data needed when rendering the client webpage
 
-
-  friends:
-    [{
-      userName: 'Daniel',
-      userScreenName: 'Daniel70483817',
-      userImage: 'http://pbs.twimg.com/profile_images/1022276224880500736/MAxiuCnI_normal.jpg'
-    },
-    {
-      userName: 'Shutter Socks',
-      userScreenName: 'ShutterSocks',
-      userImage: 'http://pbs.twimg.com/profile_images/1010200596396347392/js3hd9cA_normal.jpg'
-    },
-    {
-      userName: 'Houghton CE Primary',
-      userScreenName: 'HoughtonPrimary',
-      userImage: 'http://pbs.twimg.com/profile_images/798273681843752964/LL9M30vo_normal.jpg'
-    }],
-
-
-  DMs:
-    [{
-      text: 'Thanks !',
-      date: '1533022664723',
-      userName: 'Jeremy Bowden',
-      userImage: 'http://pbs.twimg.com/profile_images/967146176448524289/3pGqrvzR_normal.jpg'
-    },
-    {
-      text: 'done :) good luck',
-      date: '1533022658855',
-      userName: 'Daniel',
-      userImage: 'http://pbs.twimg.com/profile_images/1022276224880500736/MAxiuCnI_normal.jpg'
-    }]
-}
-*/
-let dataObject = {};
-
-let tweets = T.get('statuses/user_timeline', { screen_name: screenName, count: 5 });
-let friends = T.get('friends/list', { screen_name: screenName, count: 5 });
-let DMs = T.get('direct_messages/events/list', { screen_name: screenName, count: 20 });
-
+// create variables for the Twit functions that request data from Twitter's API
+const tweets = T.get('statuses/user_timeline', { screen_name: screenName, count: 5 });
+const friends = T.get('friends/list', { screen_name: screenName, count: 5 });
+const DMs = T.get('direct_messages/events/list', { screen_name: screenName, count: 20 });
 
 
 tweets                          // get the Promise returned by the first Twit function
@@ -177,7 +117,7 @@ tweets                          // get the Promise returned by the first Twit fu
 
   .then(function (result) {
     let DMlist = [];
-    // for unknown reasons some 'events' (i.e. DMs) are not counted, so I requested 20 and now truncate the list of DM 'events' to 5
+    // for unknown reasons some 'events' (i.e. DMs) are not counted, so I requested 20 and now truncate the list of DM 'events' to get the 5 I need
     const data = result.data.events;    // result.data.events is an array of JSON objects, one for each DM
     data.splice(5);
 
@@ -186,15 +126,16 @@ tweets                          // get the Promise returned by the first Twit fu
       let promise1 = new Promise(function (resolve, reject) {
         let DMdetails = {};
         DMdetails.text = element.message_create.message_data.text;
-        const dateAndTime = new Date(Number(element.created_timestamp)).toUTCString();
-        DMdetails.date = dateAndTime.slice(5, 11);
+        const dateAsString = new Date(Number(element.created_timestamp)).toUTCString();
+        DMdetails.date = dateAsString.slice(5, 11);
+        DMdetails.dateAndTime = (Number(element.created_timestamp)) - 1533638000000;
         resolve(DMdetails);
       });
 
       // need to get the user's name and image, which is not available in the API for "direct_messages/events/list"
       // so need to make another request to the API for that data
       const senderID = element.message_create.sender_id;
-      // Promise will be returned from the twit method
+      // Promise will be returned from the Twit method
       let user = T.get('users/show', { user_id: senderID });
 
       // get a Promise to resolve when both the Promises above are resolved
@@ -202,14 +143,19 @@ tweets                          // get the Promise returned by the first Twit fu
 
       // post-process the resolve received from populateDMdetails
       populateDMdetails.then(function (result) {
-        let objToStore = result[0];         // get the object that's resolved from promise1
+        let objToStore = result[0];         // get the object that was resolved from promise1
         const data = result[1].data;        // get the data part from the Twit resolve
         objToStore.userName = data.name;
         objToStore.userImage = data.profile_image_url;
         DMlist.push(objToStore);
+        DMlist.sort(function (a, b) {
+          return b.dateAndTime - a.dateAndTime;
+        });
       });
     });
     dataObject.DMs = DMlist;
+    // console.log("tweets[0].userName: ");
+    // console.log(tweets[0].userName);;;
   })
   .catch(function () {
     console.log("Error getting data from Twitter API");
