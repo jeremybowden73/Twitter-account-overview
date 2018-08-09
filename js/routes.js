@@ -31,19 +31,11 @@ router.post('/', (req, res) => {
       };
       data.dataObject.tweets.unshift(newMessage);
       data.dataObject.tweets.pop();
-      // console.log(data.dataObject.tweets);
+      res.redirect('/');
     })
     .catch(function () {
       console.log("Error sending tweet to Twitter API");
     });
-
-  timer();
-
-  function timer() {
-    setTimeout(function () {
-      res.redirect('/');
-    }, 2000);
-  };
 });
 
 module.exports = router;
