@@ -35,24 +35,31 @@ app.listen(3000, () => {
   console.log('The application is running on localhost:3000')
 });
 
+
 //
 // get the Twitter authentication credentials object from config.js and create a
 // new Twit object with it, which can be used to make requests to Twitter's API
 const accessKeys = require('./js/config');
-const screenName = accessKeys.screen_name; // the user's Twitter name e.g. @DonaldDuck
 const Twit = require('twit');
 const T = new Twit(accessKeys);
 
+let screenName = "";
 let dataObject = {};  // object to store all the useful data needed when rendering the client webpage
 
-// create variables for the Twit functions that request data from Twitter's API
+// create consts for the Twit functions that request data from Twitter's API
+const verifyUser = T.get('account/verify_credentials');
 const tweets = T.get('statuses/user_timeline', { screen_name: screenName, count: 5 });
 const friends = T.get('friends/list', { screen_name: screenName, count: 5 });
 const DMs = T.get('direct_messages/events/list', { screen_name: screenName, count: 20 });
 
+verifyUser
+  .then(function (result) {     // 'result' is the resolve Object from the 'verifyUser' function, i.e. { data : ... , resp : ... }
+    screenName = result.data.screen_name;
+    console.log(`Screen name: @${screenName}`);
+    return tweets;              // return a new Promise to the next .then in the chain
+  })
 
-tweets                          // get the Promise returned by the first Twit function
-  .then(function (result) {     // 'result' is the resolve Object from the first Twit function, i.e. { data : ... , resp : ... } 
+  .then(function (result) {
     const data = result.data;   // result.data is an array of JSON objects, one for each tweet by the user
     let myTweets = [];
 
