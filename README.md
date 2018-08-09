@@ -3,6 +3,7 @@ A single-page summary of a Twitter user's recent activity
 
 
 Please insert your own Twitter keys in a config file at this location:
+
 /js/config.js
 
 Formatted like this:  (note: **@DonaldDuck** should insert **DonaldDuck** for screen_name)
