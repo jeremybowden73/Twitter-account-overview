@@ -7,13 +7,17 @@ Please insert your own Twitter keys in a config file at this location:
 
 Formatted like this:  (note: **@DonaldDuck** should insert **DonaldDuck** for screen_name)
 
-const keys = {
+`const keys = {
   consumer_key: '.....',
   
   consumer_secret: '.....',
+  
   access_token: '.....',
+  
   access_token_secret: '.....',
+  
   screen_name: '...'
-};
+  
+};`
 
 module.exports = keys;
