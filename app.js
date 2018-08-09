@@ -154,8 +154,6 @@ tweets                          // get the Promise returned by the first Twit fu
       });
     });
     dataObject.DMs = DMlist;
-    // console.log("tweets[0].userName: ");
-    // console.log(tweets[0].userName);;;
   })
   .catch(function () {
     console.log("Error getting data from Twitter API");
